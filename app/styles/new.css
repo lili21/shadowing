@@ -1,0 +1,22 @@
+input {
+  display: block;
+  width: 100%;
+  padding: 7px;
+  outline: none;
+  margin-bottom: 14px;
+}
+
+input[hidden] {
+  display: none;
+}
+
+button {
+  padding: 0;
+  margin-bottom: 14px;
+  width: 80px;
+  height: 36px;
+  line-height: 36px;
+  background-color: transparent;
+  border: 1px solid #222;
+  color: #222;
+}

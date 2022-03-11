@@ -1,0 +1,27 @@
+.root {
+  display: block;
+  width: 600px;
+  margin: auto;
+}
+
+.item {
+  margin-bottom: 56px;
+}
+
+.item-title {
+  font-size: 28px;
+  color: #d23669;
+  text-decoration: none;
+  margin-bottom: 7px;
+  font-weight: 900;
+}
+
+.new-button {
+  display: inline-block;
+  padding: 7px 14px;
+  border: 1px solid #222;
+  color: #222;
+  text-decoration: none;
+  text-align: center;
+  margin-bottom: 28px;
+}
