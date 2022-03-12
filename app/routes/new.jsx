@@ -1,4 +1,4 @@
-import { redirect } from 'remix';
+import { Form, redirect, useTransition } from 'remix';
 import { useState } from 'react';
 import supabase from '~/utils/supabase';
 
@@ -26,18 +26,19 @@ export const action = async ({ request }) => {
   const _sb = supabase.from('shadows');
   _sb.headers['Authorization'] = `Bearer ${access_token}`
 
-  const { error } = await _sb
+  const { data, error } = await _sb
     .insert([
       { title, content, vid, type: 1, author },
-    ], { returning: 'minimal' })
+    ])
   
   if (error) throw new Error(error.message || 'Someting went wrong!');
 
-  return redirect('/');
+  return redirect(`/${data[0].id}`);
 }
 
 export default function Index() {
   const [vid, setVid] = useState();
+  const transition = useTransition();
 
   const handleVidChange = e => {
     const url = new URL(e.target.value);
@@ -47,7 +48,7 @@ export default function Index() {
   const session = supabase.auth.session();
 
   return (
-    <form method="post" className="form">
+    <Form method="post" className="form">
       <textarea name="content" className="editor" />
       <div>
         <input required name="title" type="text" placeholder="title" />
@@ -55,11 +56,13 @@ export default function Index() {
         <input name="vid" hidden value={vid} />
         <input name="email" hidden readOnly value={session?.user?.email} />
         <input name="access_token" readOnly hidden defaultValue={session?.access_token} />
-        <button className="button" type="submit">Save</button>
+        <button className="button" disabled={transition.submission} type="submit">
+          { transition.submission ? 'Saving...' : 'Save' }
+        </button>
         <div className="video">
           {vid && <lite-youtube videoid={vid} />}
         </div>
       </div>
-    </form>
+    </Form>
   );
 }

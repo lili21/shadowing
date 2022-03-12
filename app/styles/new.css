@@ -1,11 +1,6 @@
-.editor-form {
-  display: flex;
+body {
+  width: 1024px;
 }
-
-.editor-form > div {
-  flex: 1
-}
-
 
 input {
   display: block;

@@ -52,9 +52,8 @@ const Spinner = (props) => (
 
 export default function App() {
   const noLogin = !supabase.auth.session();
-
   const transition = useTransition();
-
+  const isLoaidng = transition.type !== 'actionReload' && transition.state === 'loading'
   const login = () => {
     supabase.auth.signIn({
       provider: 'github'
@@ -82,8 +81,7 @@ export default function App() {
             {noLogin && <button className="button" onClick={login}>Login With Github</button>}
           </div>
         </header>
-        { transition.state === 'loading' ? <Spinner /> : <Outlet />}
-        {/* <Outlet /> */}
+        { isLoaidng ? <Spinner /> : <Outlet />}
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

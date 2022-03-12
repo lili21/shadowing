@@ -1,4 +1,4 @@
-import { useLoaderData, json } from 'remix';
+import { Form, useLoaderData, useTransition } from 'remix';
 import supabase from '~/utils/supabase';
 
 import styleUrl from '~/styles/new.css'
@@ -22,12 +22,12 @@ export const action = async ({ request }) => {
   _sb.headers['Authorization'] = `Bearer ${access_token}`
 
   const id = body.get('id')
-  const { error } = await _sb
+  const { data, error } = await _sb
     .update({ content: body.get('content') }, { returning: 'minimal' })
     .eq('id', id)
 
   if (error) throw new Error(`You can't edit this!`)
-  return redirect('/')
+  return data;
 }
 
 
@@ -43,20 +43,23 @@ export const loader = async ({ params }) => {
 
 export default function Index() {
   const execise = useLoaderData();
+  const transition = useTransition();
 
   return (
-    <form method="post" className="form">
+    <Form method="post" className="form">
       <textarea autoFocus name="content" className="editor" defaultValue={execise.content} />
       <div>
         <input name="id" defaultValue={execise.id} hidden />
         <input required name="title" type="text" placeholder="title" defaultValue={execise.title} disabled />
         <input required name="url" placeholder="youtube video link" type="text" defaultValue={`https://youtube.com/watch?v=${execise.vid}`} disabled />
         <input name="access_token" readOnly hidden defaultValue={supabase.auth.session()?.access_token} />
-        <button className="button" type="submit">Save</button>
+        <button className="button" disabled={transition.submission} type="submit">
+          { transition.submission ? 'Saving...' : 'Save' }
+        </button>
         <div className="video">
           <lite-youtube videoid={execise.vid} />
         </div>
       </div>
-    </form>
+    </Form>
   );
 }
