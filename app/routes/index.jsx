@@ -1,5 +1,5 @@
 import { useLoaderData, Link } from 'remix';
-import supabase from '~/utils/supabase.server';
+import supabase from '~/utils/supabase';
 
 import styleUrl from '~/styles/index.css';
 
@@ -16,17 +16,40 @@ export const loader = async () => {
   const { data, error } = await supabase
     .from('shadows')
     .select('id,title,created_at')
+    .order('created_at', { ascending: false })
 
-  if (error) throw error;
-  return data;
+  if (error) throw error.message;
+  return data
+}
+
+
+const dateTimeFormater = new Intl.DateTimeFormat('default', {
+  year: 'numeric', month: 'numeric', day: 'numeric',
+  weekday: 'long',
+  dayPeriod: 'short'
+})
+
+function format(dateString) {
+  const date = new Date(dateString);
+  return dateTimeFormater.format(date);
 }
 
 export default function Index() {
   const execises = useLoaderData();
+  const noLogin = !supabase.auth.session();
+
+  const login = () => {
+    supabase.auth.signIn({
+      provider: 'github'
+    })
+  }
 
   return (
     <div className="root">
-      <Link className="new-button" to="/new">New Execise</Link>
+      <div className="action">
+        <Link className="button" to="/new">New Execise</Link>
+        {noLogin && <button className="button" onClick={login}>Login With Github</button>}
+      </div>
       {
         execises.map(item => <Item key={item.id} {...item} />)
       }
@@ -38,7 +61,7 @@ function Item({ id, title, created_at }) {
   return (
     <article className="item">
       <Link className="item-title" to={`/${id}`}>{title}</Link>
-      <p>{created_at}</p>
+      <p>{format(created_at)}</p>
     </article>
   )
 }

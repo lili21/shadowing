@@ -1,6 +1,6 @@
 import { redirect } from 'remix';
 import { useState } from 'react';
-import supabase from '~/utils/supabase.server';
+import supabase from '~/utils/supabase';
 
 import styleUrl from '~/styles/new.css'
 
@@ -15,14 +15,23 @@ export const links = () => {
 
 export const action = async ({ request }) => {
   const body = await request.formData();
+  const access_token = body.get('access_token');
+  const title = body.get('title');
+  const content = body.get('content')
+  const vid = body.get('vid')
+  const author = body.get('email')
 
-  const { error } = await  await supabase
-    .from('shadows')
+  if (!access_token) throw new Error('No Auth')
+
+  const _sb = supabase.from('shadows');
+  _sb.headers['Authorization'] = `Bearer ${access_token}`
+
+  const { error } = await _sb
     .insert([
-      { title: body.get('title'), content: body.get('content'), vid: body.get('vid'), type: 1 },
+      { title, content, vid, type: 1, author },
     ], { returning: 'minimal' })
   
-  if (error) throw error;
+  if (error) throw new Error(error.message || 'Someting went wrong!');
 
   return redirect('/');
 }
@@ -35,13 +44,17 @@ export default function Index() {
     setVid(url.searchParams.get('v'))
   }
 
+  const session = supabase.auth.session();
+
   return (
-    <form method="post" action="/new" className="root">
+    <form method="post" className="root">
       <textarea name="content" className="editor" />
       <div>
         <input required name="title" type="text" placeholder="title" />
-        <input required name="url" placeholder="youtube video link" type="text" onChange={handleVidChange} />
+        <input autoFocus required name="url" placeholder="youtube video link" type="text" onChange={handleVidChange} />
         <input name="vid" hidden value={vid} />
+        <input name="email" readOnly value={session?.user?.email} />
+        <input name="access_token" readOnly hidden defaultValue={session?.access_token} />
         <button type="submit">Save</button>
         <div className="video">
           {vid && <lite-youtube videoid={vid} />}

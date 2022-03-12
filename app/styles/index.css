@@ -16,12 +16,16 @@
   font-weight: 900;
 }
 
-.new-button {
-  display: inline-block;
+.action {
+  margin-bottom: 28px;
+}
+
+.button {
   padding: 7px 14px;
   border: 1px solid #222;
   color: #222;
   text-decoration: none;
   text-align: center;
-  margin-bottom: 28px;
+  margin-right: 14px;
+  background-color: transparent;
 }

@@ -46,7 +46,7 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }) {
-  console.error(error);
+  console.error(error.message);
   return (
     <html>
       <head>
@@ -56,7 +56,7 @@ export function ErrorBoundary({ error }) {
       </head>
       <body>
         {/* add the UI you want your users to see */}
-        <div className="error">WTFWTF!!!!!{error.message}</div>
+        <div className="error">Error -> {error.message}</div>
         <Scripts />
       </body>
     </html>
