@@ -6,7 +6,13 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
+  Link,
+  useTransition
 } from "remix";
+
+import ContentLoader from 'react-content-loader';
+
+import supabase from '~/utils/supabase';
 
 import styleUrl from '~/styles/global.css';
 
@@ -23,7 +29,38 @@ export function meta() {
   return { title: "Just Shadowing It" };
 }
 
+const Spinner = (props) => (
+  <ContentLoader 
+    speed={2}
+    width={340}
+    height={84}
+    viewBox="0 0 340 84"
+    backgroundColor="#f3f3f3"
+    foregroundColor="#ecebeb"
+    {...props}
+  >
+    <rect x="0" y="0" rx="3" ry="3" width="67" height="11" /> 
+    <rect x="76" y="0" rx="3" ry="3" width="140" height="11" /> 
+    <rect x="127" y="48" rx="3" ry="3" width="53" height="11" /> 
+    <rect x="187" y="48" rx="3" ry="3" width="72" height="11" /> 
+    <rect x="18" y="48" rx="3" ry="3" width="100" height="11" /> 
+    <rect x="0" y="71" rx="3" ry="3" width="37" height="11" /> 
+    <rect x="18" y="23" rx="3" ry="3" width="140" height="11" /> 
+    <rect x="166" y="23" rx="3" ry="3" width="173" height="11" />
+  </ContentLoader>
+)
+
 export default function App() {
+  const noLogin = !supabase.auth.session();
+
+  const transition = useTransition();
+
+  const login = () => {
+    supabase.auth.signIn({
+      provider: 'github'
+    })
+  }
+
   return (
     <html lang="en">
       <head>
@@ -35,7 +72,18 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        <header className="root-header">
+          <div className="links">
+            <Link to="/">Home</Link>
+            <Link to="/about">About</Link>
+          </div>
+          <div className="action">
+            <Link className="button" to="/new">New Execise</Link>
+            {noLogin && <button className="button" onClick={login}>Login With Github</button>}
+          </div>
+        </header>
+        { transition.state === 'loading' ? <Spinner /> : <Outlet />}
+        {/* <Outlet /> */}
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

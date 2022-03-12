@@ -3,17 +3,20 @@ body {
   font-size: 16px;
   line-height: 28px;
   color: #222;
-}
-
-.root {
-  width: 100vw;
+  width: 800px;
   height: 100vh;
-  display: flex;
+  margin: auto;
   padding: 16px;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
-.root > div {
+.form {
+  display: flex;
+  flex: 1;
+}
+
+.form > div {
   flex: 1
 }
 
@@ -43,8 +46,64 @@ button {
   cursor: pointer;
 }
 
+button[type=submit] {
+  margin-bottom: 14px;
+}
+
 .error {
   color: red;
   font-size: 28px;
   font-weight: 900;
+}
+
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+
+.root-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.button {
+  padding: 7px 14px;
+  border: 1px solid #222;
+  color: #222;
+  text-decoration: none;
+  text-align: center;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #e2e2e2;
+}
+
+a.button {
+  margin-right: 14px;
+}
+
+a {
+  color: #222;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+a:first-child {
+  margin-right: 14px;
 }

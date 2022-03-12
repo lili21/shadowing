@@ -1,8 +1,8 @@
-.root {
+/* .root {
   display: block;
   width: 600px;
   margin: auto;
-}
+} */
 
 .item {
   margin-bottom: 56px;
@@ -14,18 +14,4 @@
   text-decoration: none;
   margin-bottom: 7px;
   font-weight: 900;
-}
-
-.action {
-  margin-bottom: 28px;
-}
-
-.button {
-  padding: 7px 14px;
-  border: 1px solid #222;
-  color: #222;
-  text-decoration: none;
-  text-align: center;
-  margin-right: 14px;
-  background-color: transparent;
 }

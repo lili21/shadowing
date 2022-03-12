@@ -1,3 +1,12 @@
+.editor-form {
+  display: flex;
+}
+
+.editor-form > div {
+  flex: 1
+}
+
+
 input {
   display: block;
   width: 100%;
@@ -10,7 +19,7 @@ input[hidden] {
   display: none;
 }
 
-button {
+/* button {
   padding: 0;
   margin-bottom: 14px;
   width: 80px;
@@ -19,4 +28,4 @@ button {
   background-color: transparent;
   border: 1px solid #222;
   color: #222;
-}
+} */

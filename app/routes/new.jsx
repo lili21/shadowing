@@ -47,15 +47,15 @@ export default function Index() {
   const session = supabase.auth.session();
 
   return (
-    <form method="post" className="root">
+    <form method="post" className="form">
       <textarea name="content" className="editor" />
       <div>
         <input required name="title" type="text" placeholder="title" />
         <input autoFocus required name="url" placeholder="youtube video link" type="text" onChange={handleVidChange} />
         <input name="vid" hidden value={vid} />
-        <input name="email" readOnly value={session?.user?.email} />
+        <input name="email" hidden readOnly value={session?.user?.email} />
         <input name="access_token" readOnly hidden defaultValue={session?.access_token} />
-        <button type="submit">Save</button>
+        <button className="button" type="submit">Save</button>
         <div className="video">
           {vid && <lite-youtube videoid={vid} />}
         </div>

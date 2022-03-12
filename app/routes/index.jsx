@@ -36,20 +36,9 @@ function format(dateString) {
 
 export default function Index() {
   const execises = useLoaderData();
-  const noLogin = !supabase.auth.session();
-
-  const login = () => {
-    supabase.auth.signIn({
-      provider: 'github'
-    })
-  }
 
   return (
     <div className="root">
-      <div className="action">
-        <Link className="button" to="/new">New Execise</Link>
-        {noLogin && <button className="button" onClick={login}>Login With Github</button>}
-      </div>
       {
         execises.map(item => <Item key={item.id} {...item} />)
       }
