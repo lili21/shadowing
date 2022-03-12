@@ -41,8 +41,6 @@ export default function Index() {
   const login = () => {
     supabase.auth.signIn({
       provider: 'github'
-    }, {
-      redirectTo: window.location.href
     })
   }
 
