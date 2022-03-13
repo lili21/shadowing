@@ -1,4 +1,4 @@
-import { Form, redirect, useTransition } from 'remix';
+import { Form, redirect, useTransition, useActionData, json } from 'remix';
 import { useState } from 'react';
 import supabase from '~/utils/supabase';
 
@@ -21,7 +21,9 @@ export const action = async ({ request }) => {
   const vid = body.get('vid')
   const author = body.get('email')
 
-  if (!access_token) throw new Error('No Auth')
+  if (!access_token) return json(`Are you a girl have no name?`, {
+    status: 401
+  })
 
   const _sb = supabase.from('shadows');
   _sb.headers['Authorization'] = `Bearer ${access_token}`
@@ -31,7 +33,9 @@ export const action = async ({ request }) => {
       { title, content, vid, type: 1, author },
     ])
   
-  if (error) throw new Error(error.message || 'Someting went wrong!');
+  if (error)  return json(error.message || `Something went wrong!`, {
+    status: 500
+  })
 
   return redirect(`/${data[0].id}`);
 }
@@ -39,6 +43,7 @@ export const action = async ({ request }) => {
 export default function Index() {
   const [vid, setVid] = useState();
   const transition = useTransition();
+  const error = useActionData();
 
   const handleVidChange = e => {
     const url = new URL(e.target.value);
@@ -62,6 +67,7 @@ export default function Index() {
         <div className="video">
           {vid && <lite-youtube videoid={vid} />}
         </div>
+        {error && <p className="error">{error}</p>}
       </div>
     </Form>
   );

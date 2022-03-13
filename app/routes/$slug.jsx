@@ -1,4 +1,4 @@
-import { Form, useLoaderData, useTransition } from 'remix';
+import { Form, useLoaderData, useTransition, useActionData, json } from 'remix';
 import supabase from '~/utils/supabase';
 
 import styleUrl from '~/styles/new.css'
@@ -16,18 +16,22 @@ export const action = async ({ request }) => {
   const body = await request.formData();
   const access_token = body.get('access_token');
 
-  if (!access_token) throw new Error('No Auth!')
+  if (!access_token) return json(`Are you a girl have no name?`, {
+    status: 401
+  })
 
   const _sb = supabase.from('shadows');
   _sb.headers['Authorization'] = `Bearer ${access_token}`
 
   const id = body.get('id')
-  const { data, error } = await _sb
+  const { error } = await _sb
     .update({ content: body.get('content') }, { returning: 'minimal' })
     .eq('id', id)
 
-  if (error) throw new Error(`You can't edit this!`)
-  return data;
+  if (error) return json(`You can't edit it, it's not yours`, {
+    status: 403
+  })
+  return null;
 }
 
 
@@ -44,6 +48,7 @@ export const loader = async ({ params }) => {
 export default function Index() {
   const execise = useLoaderData();
   const transition = useTransition();
+  const error = useActionData();
 
   return (
     <Form method="post" className="form">
@@ -59,6 +64,7 @@ export default function Index() {
         <div className="video">
           <lite-youtube videoid={execise.vid} />
         </div>
+        {error && <p className="error">{error}</p>}
       </div>
     </Form>
   );
