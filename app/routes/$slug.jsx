@@ -25,10 +25,10 @@ export const action = async ({ request }) => {
 
   const id = body.get('id')
   const { error } = await _sb
-    .update({ content: body.get('content') }, { returning: 'minimal' })
+    .update({ content: body.get('content'), updated_at: new Date() }, { returning: 'minimal' })
     .eq('id', id)
 
-  if (error) return json(`You can't edit it, it's not yours`, {
+  if (error) return json(error.message || `You can't edit it, it's not yours`, {
     status: 403
   })
   return null;
