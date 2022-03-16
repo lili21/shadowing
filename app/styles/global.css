@@ -88,12 +88,12 @@ blockquote:before {
   transition: background-color 0.3s ease;
 }
 
-.button:hover {
-  background-color: #e2e2e2;
+.button:nth-of-type(2) {
+  margin-left: 14px;
 }
 
-a.button {
-  margin-right: 14px;
+.button:hover {
+  background-color: #e2e2e2;
 }
 
 a {

@@ -25,10 +25,9 @@ export const action = async ({ request }) => {
     status: 401
   })
 
-  const _sb = supabase.from('shadows');
-  _sb.headers['Authorization'] = `Bearer ${access_token}`
+  supabase.auth.setAuth(access_token);
 
-  const { data, error } = await _sb
+  const { data, error } = await supabase.from('shadows')
     .insert([
       { title, content, vid, type: 1, author },
     ])

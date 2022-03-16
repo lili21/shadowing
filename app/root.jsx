@@ -7,7 +7,8 @@ import {
   ScrollRestoration,
   useCatch,
   Link,
-  useTransition
+  useTransition,
+  useNavigate
 } from "remix";
 
 import ContentLoader from 'react-content-loader';
@@ -53,6 +54,7 @@ const Spinner = (props) => (
 export default function App() {
   const noLogin = !supabase.auth.session();
   const transition = useTransition();
+  const navigator = useNavigate();
   const isLoaidng = transition.type !== 'actionReload' && transition.state === 'loading'
   const login = () => {
     supabase.auth.signIn({
@@ -77,8 +79,8 @@ export default function App() {
             <Link to="/about">About</Link>
           </div>
           <div className="action">
-            <Link className="button" to="/new">New Execise</Link>
-            {noLogin && <button className="button" onClick={login}>Login With Github</button>}
+            <button className="button" onClick={() => navigator('/new')}>New Execise</button>
+            {noLogin && <button onClick={login} className="button">Login With Github</button>}
           </div>
         </header>
         { isLoaidng ? <Spinner /> : <Outlet />}
