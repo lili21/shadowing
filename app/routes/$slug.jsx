@@ -1,5 +1,5 @@
-import { useRef, useEffect } from 'react';
-import { Form, useLoaderData, useTransition, useActionData, json } from 'remix';
+import { useRef, useState, useEffect } from 'react';
+import { Form, useLoaderData, useTransition, useActionData, json, useBeforeUnload } from 'remix';
 import supabase from '~/utils/supabase';
 
 import styleUrl from '~/styles/new.css'
@@ -47,24 +47,24 @@ export const loader = async ({ params }) => {
 
 export default function Index() {
   const ref = useRef();
-  const execise = useLoaderData();
+  // const execise = useLoaderData();
+  const [execise, setExecise] = useState(useLoaderData())
   const transition = useTransition();
   const error = useActionData();
 
-  if (localStorage.getItem(execise.id)) {
-    execise.content = localStorage.getItem(execise.id)
-  }
+  useBeforeUnload(() => {
+    // store the draft
+    localStorage.setItem(execise.id, document.querySelector('.editor').value);
+  })
 
   useEffect(() => {
-    const listener = () => {
-      if (document.visibilityState === 'hidden') {
-        // store the draft
-        localStorage.setItem(execise.id, document.querySelector('.editor').value);
-      }
-    }
-    document.addEventListener('visibilitychange', listener)
-    return () => {
-      document.removeEventListener('visibilitychange', listener)
+    const draft = localStorage.getItem(execise.id);
+
+    if (draft) {
+      setExecise({
+        ...execise,
+        content: draft
+      })
     }
   }, [])
 
