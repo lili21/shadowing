@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { Form, useLoaderData, useTransition, useActionData, json } from 'remix';
 import supabase from '~/utils/supabase';
 
@@ -31,7 +31,7 @@ export const action = async ({ request }) => {
   if (error) return json(error.message || `You can't edit it, it's not yours`, {
     status: 403
   })
-  return 'success';
+  return null;
 }
 
 
@@ -51,7 +51,25 @@ export default function Index() {
   const transition = useTransition();
   const error = useActionData();
 
-  if (error === 'success' && transition.type === 'actionReload') {
+  if (localStorage.getItem(execise.id)) {
+    execise.content = localStorage.getItem(execise.id)
+  }
+
+  useEffect(() => {
+    const listener = () => {
+      if (document.visibilityState === 'hidden') {
+        // store the draft
+        localStorage.setItem(execise.id, document.querySelector('.editor').value);
+      }
+    }
+    document.addEventListener('visibilitychange', listener)
+    return () => {
+      document.removeEventListener('visibilitychange', listener)
+    }
+  }, [])
+
+  if (transition.type === 'actionReload') {
+    localStorage.removeItem(execise.id);
     ref.current?.show();
     setTimeout(() => {
       ref.current?.close();

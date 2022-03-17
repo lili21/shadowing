@@ -1,5 +1,5 @@
 import { Form, redirect, useTransition, useActionData, json } from 'remix';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import supabase from '~/utils/supabase';
 
 import styleUrl from '~/styles/new.css'
@@ -43,6 +43,21 @@ export default function Index() {
   const [vid, setVid] = useState();
   const transition = useTransition();
   const error = useActionData();
+
+  // console.log('new transition', transition)
+
+  // useEffect(() => {
+  //   const listener = () => {
+  //     if (document.visibilityState === 'hidden') {
+  //       // store the draft
+  //       localStorage.setItem('new-content', document.querySelector('.editor').value);
+  //     }
+  //   }
+  //   document.addEventListener('visibilitychange', listener)
+  //   return () => {
+  //     document.removeEventListener('visibilitychange', listener)
+  //   }
+  // }, [])
 
   const handleVidChange = e => {
     const url = new URL(e.target.value);
