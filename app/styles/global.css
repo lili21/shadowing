@@ -3,7 +3,7 @@ body {
   font-size: 16px;
   line-height: 28px;
   color: #222;
-  width: 1024px;
+  width: 1260px;
   height: 100vh;
   margin: auto;
   padding: 16px;
@@ -17,7 +17,7 @@ body {
 }
 
 .form > div {
-  flex: 1
+  width: 720px;
 }
 
 .editor {
