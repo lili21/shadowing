@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { Form, useLoaderData, useTransition, useActionData, json, useBeforeUnload } from 'remix';
+import { Form, useLoaderData, useTransition, useActionData, json, useBeforeUnload, Outlet, useSubmit } from 'remix';
 import supabase from '~/utils/supabase';
 
 import styleUrl from '~/styles/new.css'
@@ -21,12 +21,20 @@ export const action = async ({ request }) => {
     status: 401
   })
 
+  console.log('duration', body.get('duration'))
+
   supabase.auth.setAuth(access_token);
 
   const id = body.get('id')
-  const { error } = await supabase.from('shadows')
-    .update({ content: body.get('content'), updated_at: new Date() }, { returning: 'minimal' })
-    .eq('id', id)
+  const [{ error }, { error: err}] = await Promise.all([
+    supabase.from('shadows')
+      .update({ content: body.get('content'), updated_at: new Date() }, { returning: 'minimal' })
+      .eq('id', id),
+
+    supabase.from('activities').insert([{ duration: body.get('duration'), shadow_id: id }])
+  ]);
+
+  console.log(err)
 
   if (error) return json(error.message || `You can't edit it, it's not yours`, {
     status: 403
@@ -39,7 +47,7 @@ export const loader = async ({ params }) => {
   let { data, error } = await supabase
     .from('shadows')
     .select('id,title,content,vid')
-    .eq('id', params.slug);
+    .eq('id', params.shadow);
 
   if (error) throw error.message;
   return data[0];
@@ -51,6 +59,15 @@ export default function Index() {
   const [execise, setExecise] = useState(useLoaderData())
   const transition = useTransition();
   const error = useActionData();
+  const submit = useSubmit();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    formData.append('duration', Date.now() - window.startTime);
+    submit(formData, { method: 'post' })
+  }
+
 
   useBeforeUnload(() => {
     // store the draft
@@ -78,7 +95,7 @@ export default function Index() {
 
   return (
     <>
-      <Form method="post" className="form">
+      <Form method="post" className="form" onSubmit={handleSubmit}>
         <textarea autoFocus name="content" className="editor" defaultValue={execise.content} />
         <div>
           <input name="id" defaultValue={execise.id} hidden />
@@ -86,11 +103,12 @@ export default function Index() {
           <input required name="url" placeholder="youtube video link" type="text" defaultValue={`https://youtube.com/watch?v=${execise.vid}`} disabled />
           <input name="access_token" readOnly hidden defaultValue={supabase.auth.session()?.access_token} />
           <button className="button" disabled={transition.submission} type="submit">
-            { transition.submission ? 'Saving...' : 'Save' }
+            {transition.submission ? 'Saving...' : 'Save'}
           </button>
           <div className="video">
             <lite-youtube videoid={execise.vid} />
           </div>
+          <Outlet />
           {error && <p className="error">{error}</p>}
         </div>
       </Form>

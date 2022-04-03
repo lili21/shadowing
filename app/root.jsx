@@ -82,6 +82,11 @@ export default function App() {
             <button className="button" onClick={() => navigator('/new')}>New Execise</button>
             {noLogin && <button onClick={login} className="button">Login With Github</button>}
           </div>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.startTime = ${Date.now()}`,
+            }}
+          />
         </header>
         { isLoaidng ? <Spinner /> : <Outlet />}
         <ScrollRestoration />

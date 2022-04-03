@@ -1,5 +1,6 @@
 import { useLoaderData, Link } from 'remix';
 import supabase from '~/utils/supabase';
+import { format } from '~/utils/date';
 
 import styleUrl from '~/styles/index.css';
 
@@ -20,18 +21,6 @@ export const loader = async () => {
 
   if (error) throw error.message;
   return data
-}
-
-
-const dateTimeFormater = new Intl.DateTimeFormat('default', {
-  year: 'numeric', month: 'numeric', day: 'numeric',
-  weekday: 'long',
-  dayPeriod: 'short'
-})
-
-function format(dateString) {
-  const date = new Date(dateString);
-  return dateTimeFormater.format(date);
 }
 
 export default function Index() {
