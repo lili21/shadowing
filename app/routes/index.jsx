@@ -1,4 +1,4 @@
-import { useLoaderData, Link } from 'remix';
+import { useLoaderData, Link } from '@remix-run/react';
 import supabase from '~/utils/supabase';
 import { format } from '~/utils/date';
 

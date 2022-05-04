@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
-import { Form, useLoaderData, useTransition, useActionData, json, useBeforeUnload, Outlet, useSubmit } from 'remix';
+import { Form, useLoaderData, useTransition, useActionData, useBeforeUnload, Outlet, useSubmit } from '@remix-run/react';
+import { json } from '@remix-run/node'
 import supabase from '~/utils/supabase';
 
 import styleUrl from '~/styles/new.css'

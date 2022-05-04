@@ -9,7 +9,7 @@ import {
   Link,
   useTransition,
   useNavigate
-} from "remix";
+} from "@remix-run/react";
 
 import ContentLoader from 'react-content-loader';
 
